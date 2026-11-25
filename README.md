@@ -22,6 +22,13 @@ Each flow reaches the second-factor (OTP) page; sandbox flows also **complete th
 
 The mock checkout (`mock_app/`) is served locally by the test run, so the framework can be
 verified on any machine without internet or accounts.
+## Automation Demo Video
+
+The recorded Playwright automation execution is available at:
+
+`videos/automated/PXP_Playwright_Automation_Demo.webm`
+
+The video demonstrates automated product selection, cart navigation, checkout and payment form navigation.
 
 ## Prerequisites
 - Python 3.10+
@@ -92,11 +99,5 @@ scripts/     demo-run helpers
 - Real bank OTPs cannot be automated; live flows stop at the OTP page. OTP completion is demonstrated on the sandbox checkout.
 - Live selectors change over time and may need refreshing in the YAML.
 
-## Automation Demo Video
 
-The recorded Playwright automation execution is available at:
-
-`videos/automated/PXP_Playwright_Automation_Demo.webm`
-
-The video demonstrates automated product selection, cart navigation, checkout and payment form navigation.
 
