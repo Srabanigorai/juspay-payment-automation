@@ -91,3 +91,12 @@ scripts/     demo-run helpers
 - Live production sites may use bot detection or CAPTCHAs; the framework does not bypass them. Run headed and use your own test accounts/cards.
 - Real bank OTPs cannot be automated; live flows stop at the OTP page. OTP completion is demonstrated on the sandbox checkout.
 - Live selectors change over time and may need refreshing in the YAML.
+
+## Automation Demo Video
+
+The recorded Playwright automation execution is available at:
+
+`videos/automated/PXP_Playwright_Automation_Demo.webm`
+
+The video demonstrates automated product selection, cart navigation, checkout and payment form navigation.
+
