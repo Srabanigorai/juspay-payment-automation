@@ -1,0 +1,19 @@
+# Live Android targets driven through Appium. Set enabled: true after filling in locators.
+# Find locators with Appium Inspector (or: adb shell uiautomator dump).
+# Locator syntax: "id=<resource-id>" | "acc=<content-desc>" | "xpath=<xpath>" | "uia=<UiSelector string>"
+# Actions: click | fill | wait_for | pause | back | scroll_to_text
+# Use only your own test account / test card and low-value orders.
+targets:
+  - name: mobile-app-card-checkout
+    enabled: false
+    app_package: "${APP_PACKAGE}"
+    app_activity: "${APP_ACTIVITY}"
+    steps:
+      - {action: click, locator: "REPLACE: add to cart", note: "Add item"}
+      - {action: click, locator: "REPLACE: checkout"}
+      - {action: click, locator: "REPLACE: card payment option"}
+      - {action: fill,  locator: "REPLACE: card number", value: "${CARD_NUMBER}"}
+      - {action: fill,  locator: "REPLACE: expiry", value: "${CARD_EXPIRY}"}
+      - {action: fill,  locator: "REPLACE: cvv", value: "${CARD_CVV}"}
+      - {action: click, locator: "REPLACE: pay"}
+    otp_locator: "REPLACE: OTP input or heading"

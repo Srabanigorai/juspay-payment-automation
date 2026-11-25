@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Mock Pay Checkout</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+ body{font-family:system-ui,sans-serif;max-width:520px;margin:32px auto;padding:0 16px}
+ section{display:none;border:1px solid #ddd;border-radius:10px;padding:20px}
+ section.active{display:block}
+ button{padding:10px 16px;border:0;border-radius:6px;background:#2d5bff;color:#fff;cursor:pointer}
+ [role=tablist]{display:flex;gap:8px;margin-bottom:12px}
+ [role=tab]{background:#eee;color:#222}[role=tab][aria-selected=true]{background:#2d5bff;color:#fff}
+ .panel{display:none}.panel.active{display:block}
+ input,select{display:block;width:100%;padding:8px;margin:6px 0 10px;box-sizing:border-box}
+ iframe{width:100%;height:330px;border:1px solid #eee}
+ .err{color:#b00020;min-height:1.2em}
+</style></head>
+<body>
+<h1>Mock Pay Store</h1>
+
+<section id="cart" class="active">
+  <h2>Your cart</h2>
+  <p>Wireless Mouse × 1 — <strong id="total">₹499</strong></p>
+  <button id="pay-btn">Proceed to pay</button>
+</section>
+
+<section id="payment">
+  <h2>Choose payment method</h2>
+  <div role="tablist">
+    <button role="tab" aria-selected="true" data-m="card">Card</button>
+    <button role="tab" aria-selected="false" data-m="upi">UPI</button>
+    <button role="tab" aria-selected="false" data-m="netbanking">Netbanking</button>
+  </div>
+  <div class="panel active" id="panel-card"><iframe id="card-frame" title="Secure card form" src="card_frame.html"></iframe></div>
+  <div class="panel" id="panel-upi">
+    <label for="upi-id">UPI ID</label><input id="upi-id" placeholder="name@bank">
+    <button id="upi-pay">Verify and pay</button><p class="err" id="upi-error" role="alert"></p>
+  </div>
+  <div class="panel" id="panel-netbanking">
+    <label for="bank">Select bank</label>
+    <select id="bank"><option value="">Choose…</option><option>Test Bank</option><option>Demo National Bank</option></select>
+    <button id="nb-pay">Pay via netbanking</button><p class="err" id="nb-error" role="alert"></p>
+  </div>
+</section>
+
+<section id="otp">
+  <h2>Enter OTP</h2>
+  <p id="otp-hint">An OTP was sent to your registered mobile number.</p>
+  <label for="otp-input">One-time password</label>
+  <input id="otp-input" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+  <button id="otp-submit">Submit OTP</button>
+  <p class="err" id="otp-error" role="alert"></p>
+</section>
+
+<section id="success"><h2 id="success-title">Payment successful</h2><p id="txn">Transaction ID: <span id="txn-id"></span></p></section>
+<section id="failed"><h2 id="failed-title">Payment failed</h2><p>Too many incorrect OTP attempts.</p></section>
+
+<script>
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll('body>section').forEach(s=>s.classList.toggle('active',s.id===id))}
+let attempts=3;
+$('pay-btn').onclick=()=>show('payment');
+document.querySelectorAll('[role=tab]').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('[role=tab]').forEach(x=>x.setAttribute('aria-selected',x===t));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+t.dataset.m));
+});
+window.addEventListener('message',e=>{if(e.data&&e.data.type==='card-ok'){$('otp-hint').textContent='OTP sent for card ending '+e.data.last4;show('otp')}});
+$('upi-pay').onclick=()=>{
+  if(!/^[\w.\-]+@[\w]+$/.test($('upi-id').value.trim())){$('upi-error').textContent='Invalid UPI ID';return}
+  $('upi-error').textContent='';$('otp-hint').textContent='Approve the request in your UPI app, then enter the OTP.';show('otp')};
+$('nb-pay').onclick=()=>{
+  if(!$('bank').value){$('nb-error').textContent='Please select a bank';return}
+  $('nb-error').textContent='';$('otp-hint').textContent='Authenticate with '+$('bank').value+' using the OTP sent to you.';show('otp')};
+$('otp-submit').onclick=()=>{
+  if($('otp-input').value.trim()==='123456'){$('txn-id').textContent='TXN'+Date.now();show('success');return}
+  attempts--;
+  if(attempts<=0){show('failed');return}
+  $('otp-error').textContent='Invalid OTP. '+attempts+' attempts left';$('otp-input').value='';
+};
+</script></body></html>

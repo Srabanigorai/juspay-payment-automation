@@ -1,0 +1,9 @@
+{
+  "success":  {"number": "4111 1111 1111 1111", "expiry": "12/30", "cvv": "123", "name": "Test User"},
+  "declined": {"number": "4000 0000 0000 0002", "expiry": "12/30", "cvv": "123", "name": "Test User"},
+  "invalid":  {"number": "4111 1111 1111 1112", "expiry": "12/30", "cvv": "123", "name": "Test User"},
+  "upi_id": "success@testbank",
+  "bank": "Test Bank",
+  "otp_valid": "123456",
+  "otp_invalid": "000000"
+}

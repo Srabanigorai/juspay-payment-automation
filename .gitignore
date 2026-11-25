@@ -1,0 +1,9 @@
+__pycache__/
+.venv/
+.env
+reports/artifacts/
+reports/report.html
+*.pyc
+
+videos/*.webm
+videos/**/*.webm

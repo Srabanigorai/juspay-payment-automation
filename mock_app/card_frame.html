@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Card form</title>
+<style>
+ body{font-family:system-ui,sans-serif;margin:0;padding:12px}
+ label{display:block;margin:8px 0;font-size:14px}
+ input{display:block;width:100%;padding:8px;margin-top:4px;box-sizing:border-box}
+ button{padding:10px 16px;margin-top:8px;background:#2d5bff;color:#fff;border:0;border-radius:6px;cursor:pointer}
+ #card-error{color:#b00020;min-height:1.2em}
+</style></head>
+<body>
+<form id="card-form" autocomplete="off">
+  <label>Card number<input id="card-number" inputmode="numeric" placeholder="1234 5678 9012 3456"></label>
+  <label>Expiry (MM/YY)<input id="card-expiry" placeholder="MM/YY"></label>
+  <label>CVV<input id="card-cvv" type="password" maxlength="4"></label>
+  <label>Name on card<input id="card-name"></label>
+  <button type="submit" id="card-submit">Pay ₹499</button>
+  <p id="card-error" role="alert"></p>
+</form>
+<script>
+function luhn(n){let s=0,alt=false;for(let i=n.length-1;i>=0;i--){let d=+n[i];if(alt){d*=2;if(d>9)d-=9}s+=d;alt=!alt}return s%10===0}
+document.getElementById('card-form').addEventListener('submit',e=>{
+  e.preventDefault();
+  const err=document.getElementById('card-error');err.textContent='';
+  const num=document.getElementById('card-number').value.replace(/\s/g,'');
+  const exp=document.getElementById('card-expiry').value.trim();
+  const cvv=document.getElementById('card-cvv').value.trim();
+  const name=document.getElementById('card-name').value.trim();
+  if(!/^\d{13,19}$/.test(num)||!luhn(num)){err.textContent='Invalid card number';return}
+  if(!/^(0[1-9]|1[0-2])\/\d{2}$/.test(exp)){err.textContent='Invalid expiry';return}
+  if(!/^\d{3,4}$/.test(cvv)){err.textContent='Invalid CVV';return}
+  if(!name){err.textContent='Name is required';return}
+  if(num==='4000000000000002'){err.textContent='Card declined by issuer';return}
+  parent.postMessage({type:'card-ok',last4:num.slice(-4)},'*');
+});
+</script></body></html>

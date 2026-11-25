@@ -1,0 +1,30 @@
+# Live web targets. Set enabled: true after filling in selectors.
+# Find selectors fast with:  playwright codegen <url>
+# Use ${VAR} for anything personal (values come from .env). Use only your own
+# test accounts / test cards, and keep order values low.
+#
+# Actions: goto | click | fill | type | select | press | wait_for | pause
+# Add  frame: "<css of iframe>"  to a step when the field is inside an iframe.
+# Optional (sandbox/test-mode merchants only): otp_value + submit_selector + success_selector
+targets:
+  - name: live-web-card-checkout
+    enabled: false
+    steps:
+      - {action: goto, value: "${LIVE_URL}"}
+      - {action: click, selector: "REPLACE: add-to-cart button", note: "Add item to cart"}
+      - {action: click, selector: "REPLACE: checkout button", note: "Go to checkout"}
+      - {action: click, selector: "REPLACE: card payment option", note: "Choose card"}
+      - {action: type, selector: "REPLACE: card number", frame: "REPLACE: iframe css", value: "${CARD_NUMBER}"}
+      - {action: fill, selector: "REPLACE: expiry", frame: "REPLACE: iframe css", value: "${CARD_EXPIRY}"}
+      - {action: fill, selector: "REPLACE: cvv", frame: "REPLACE: iframe css", value: "${CARD_CVV}"}
+      - {action: click, selector: "REPLACE: pay button", note: "Submit payment"}
+    otp_selector: "REPLACE: otp input or OTP page heading"
+
+  - name: live-web-upi-checkout
+    enabled: false
+    steps:
+      - {action: goto, value: "${LIVE_URL}"}
+      - {action: click, selector: "REPLACE: UPI option"}
+      - {action: fill, selector: "REPLACE: UPI id input", value: "${UPI_ID}"}
+      - {action: click, selector: "REPLACE: verify/pay button"}
+    otp_selector: "REPLACE: second-factor page element"
